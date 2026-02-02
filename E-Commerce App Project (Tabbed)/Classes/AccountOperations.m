@@ -18,6 +18,7 @@
 
 @implementation AccountOperations
 
+@synthesize isOfflineMode;
 
 + (AccountOperations *)sharedInstance
 {
@@ -26,15 +27,60 @@
     static dispatch_once_t once;
     dispatch_once(&once,^{
         _sharedAccountOperations = [[AccountOperations alloc] init];
+        _sharedAccountOperations.isOfflineMode = NO;
     });
     
     return _sharedAccountOperations;
 }
 
+- (NSDictionary *)getDummyUserData {
+    return @{
+        @"firstName": @"Demo",
+        @"lastName": @"User",
+        @"usersEmail": @"demo@example.com",
+        @"phone": @"555-123-4567",
+        @"address": @"123 Demo Street, Sample City",
+        @"userExist": @"TRUE",
+        @"RequestExecuted": @"TRUE",
+        @"actionRequest": @"CHECK_USER_LOGIN"
+    };
+}
+
+- (void)showOfflineNotification:(UIViewController *)viewController {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Offline Mode"
+                                                                   message:@"Unable to connect to server. The app is running in offline mode with demo data."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okAction];
+    [viewController presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)handleOfflineModeWithAction:(NSString *)actionRequest callback:(void (^)(NSError *error, BOOL success, NSString* customErrorMessage))callback {
+    self.isOfflineMode = YES;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if ([actionRequest isEqualToString:@"CHECK_USER_LOGIN"]) {
+        NSDictionary *dummyData = [self getDummyUserData];
+        [defaults setBool:YES forKey:@"SeesionUserLoggedIN"];
+        [defaults setObject:dummyData[@"usersEmail"] forKey:@"SessionLoggedInuserEmail"];
+        [defaults setObject:dummyData forKey:@"LoggedInUsersDetail"];
+        [defaults synchronize];
+        callback(nil, YES, @"Offline Mode: Logged in with demo account");
+    } else if ([actionRequest isEqualToString:@"REGISTER_USER"]) {
+        callback(nil, YES, @"Offline Mode: Registration simulated successfully");
+    } else if ([actionRequest isEqualToString:@"EDIT_USER"]) {
+        callback(nil, YES, @"Offline Mode: Profile update simulated successfully");
+    } else {
+        callback(nil, YES, @"Offline Mode: Operation completed with demo data");
+    }
+}
+
 - (NSString *)sha1:(NSString *)str {
     const char *cStr = [str UTF8String];
     unsigned char result[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(cStr, strlen(cStr), result);
+    CC_SHA1(cStr, (CC_LONG)strlen(cStr), result);
     NSString *s = [NSString  stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
                    result[0], result[1], result[2], result[3], result[4],
                    result[5], result[6], result[7],
@@ -59,34 +105,42 @@
 
 -(void)sendRequestToServer:(NSDictionary *)dataToSend callback:(void (^)(NSError *error, BOOL success, NSString* customErrorMessage))callback{
     
+    NSString *actionRequest = dataToSend[@"actionRequest"];
+    
     NSError* jsonSerializationError;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataToSend options:0 error:&jsonSerializationError];
     if (!jsonData) {
         //NSLog(@"Got jsonSerailError: %@",jsonSerializationError);
-    }else{
-        NSString *jsonString;
-        jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        NSData* requestData = [NSData dataWithBytes:[jsonString UTF8String] length:[jsonString lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-        
-        [request setURL:[NSURL URLWithString:@"https://apiforios.appendtech.com/urltosendrequestwithdata.php?InitialSecureKey:ououhkju59703373367639792F423F4528482B4D6251655468576D5A7134743777217A25iuiu"]];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [request setValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:@"theHeaderString" forHTTPHeaderField:@"AmrLagto"];
-        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:requestData];
-        NSURLSessionDataTask *task = [[self getURLSession] dataTaskWithRequest:request completionHandler:^( NSData *data, NSURLResponse *response, NSError *error )
-                  {
-                      dispatch_async( dispatch_get_main_queue(),
-                            ^{
-                                // parse returned data
-                                NSString *customErrorMessage;
-                                if (error) {
-                                    customErrorMessage = @"Something Went Wrong! Please try again after Sometime";
-                                    callback(error, YES, customErrorMessage);
-                                }
-                                else {
+        [self handleOfflineModeWithAction:actionRequest callback:callback];
+        return;
+    }
+    
+    NSString *jsonString;
+    jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSData* requestData = [NSData dataWithBytes:[jsonString UTF8String] length:[jsonString lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setURL:[NSURL URLWithString:@"https://apiforios.appendtech.com/urltosendrequestwithdata.php?InitialSecureKey:ououhkju59703373367639792F423F4528482B4D6251655468576D5A7134743777217A25iuiu"]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"theHeaderString" forHTTPHeaderField:@"AmrLagto"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:requestData];
+    
+    __weak AccountOperations *weakSelf = self;
+    NSURLSessionDataTask *task = [[self getURLSession] dataTaskWithRequest:request completionHandler:^( NSData *data, NSURLResponse *response, NSError *error )
+              {
+                  dispatch_async( dispatch_get_main_queue(),
+                        ^{
+                            // parse returned data
+                            NSString *customErrorMessage;
+                            if (error) {
+                                // Network error - fall back to offline mode
+                                [weakSelf handleOfflineModeWithAction:actionRequest callback:callback];
+                                return;
+                            }
+                            else {
                                     // for Quick Testing
 //                                    NSString *result = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 //                                    NSLog(@"result of strign %@",result);
@@ -162,16 +216,13 @@
                                         }
                                         
                                 }else{
-                                    //request not executed but reached the server
-                                    NSString *anotherCustomErrorMessage = @"Server Busy! Please Come Back After Some Time";
-                                            callback(error, NO, anotherCustomErrorMessage);
+                                    //request not executed but reached the server - fall back to offline mode
+                                    [weakSelf handleOfflineModeWithAction:actionRequest callback:callback];
                                     }
                                 }
                             } );
                   }];
-        [task resume];
-    }
-    
+    [task resume];
 }
 - (BOOL)validateEmailAccount:(NSString*)checkString
 {

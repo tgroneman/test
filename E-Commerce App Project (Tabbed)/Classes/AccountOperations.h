@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AccountOperations : NSObject
+
+@property (nonatomic, assign) BOOL isOfflineMode;
 
 +(AccountOperations *) sharedInstance; // the purpose is to load all users data is cache
 
@@ -20,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)sendRequestToServer:(NSDictionary *)dataToSend callback:(void (^)(NSError *error, BOOL success, NSString* customErrorMessage))callback;
 
 - (BOOL)validateEmailAccount:(NSString*)checkString;
+
+- (void)showOfflineNotification:(UIViewController *)viewController;
+- (NSDictionary *)getDummyUserData;
 
 @end
 
