@@ -50,20 +50,29 @@
                                 @"CHECK_USER_LOGIN",@"actionRequest",loginFormEmail.text,@"email",
                                 encryptedPassword,@"password",
                                 nil];
-    [accountOperationsObj sendRequestToServer:dataToSend callback:^(NSError *error, BOOL success, NSString *customErrorMessage){
-        if (success) {
-            if([customErrorMessage isEqualToString:@"Login Successful"]){
-                [sender setTitle:@"Logged In" forState:UIControlStateNormal];
-                [sender setBackgroundColor:[UIColor greenColor]];
-                [self.navigationController popToRootViewControllerAnimated:YES];
+        [accountOperationsObj sendRequestToServer:dataToSend callback:^(NSError *error, BOOL success, NSString *customErrorMessage){
+            if (success) {
+                // Check if we're in offline mode
+                if ([customErrorMessage hasPrefix:@"Offline Mode:"]) {
+                    [sender setTitle:@"Demo Mode" forState:UIControlStateNormal];
+                    [sender setBackgroundColor:[UIColor orangeColor]];
+                    [accountOperationsObj showOfflineNotification:self];
+                    // Still navigate to home after showing notification
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.navigationController popToRootViewControllerAnimated:YES];
+                    });
+                } else if([customErrorMessage isEqualToString:@"Login Successful"]){
+                    [sender setTitle:@"Logged In" forState:UIControlStateNormal];
+                    [sender setBackgroundColor:[UIColor greenColor]];
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }else{
+                    [self generalAlerts:@"Alert!" withMessage:customErrorMessage withYesActionTitle:@"Cancel Log In!" withNoActionTitle:@"Back to Login!"];
+                }
             }else{
-                [self generalAlerts:@"Alert!" withMessage:customErrorMessage withYesActionTitle:@"Cancel Log In!" withNoActionTitle:@"Back to Login!"];
+                [self generalAlerts:@"Not Logged In!" withMessage:@"Something went wrong please try again!" withYesActionTitle:@"Cancel Log In" withNoActionTitle:@"Ok!"];
+                [sender setTitle:@"Try Again" forState:UIControlStateNormal];
             }
-        }else{
-            [self generalAlerts:@"Not Logged In!" withMessage:@"Something went wrong please try again!" withYesActionTitle:@"Cancel Log In" withNoActionTitle:@"Ok!"];
-            [sender setTitle:@"Try Again" forState:UIControlStateNormal];
-        }
-    }];
+        }];
 }
 - (IBAction)loginFormSignInButton:(id)sender {
     
