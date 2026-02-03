@@ -2,27 +2,18 @@
 //  SaleViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
 
 class SaleViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    // MARK: - ViewModel
+    private let viewModel = SaleViewModel()
+    
+    // MARK: - IBOutlets
     @IBOutlet var saleCollectionView: UICollectionView!
-    var saleItemsList: [Item] = []
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        let allItemsList = Items.sharedInstance.allItems
-        saleItemsList = returnSaleArray(allItemsList)
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        let allItemsList = Items.sharedInstance.allItems
-        saleItemsList = returnSaleArray(allItemsList)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,19 +22,8 @@ class SaleViewController: UIViewController, UICollectionViewDataSource, UICollec
         saleCollectionView.delegate = self
     }
     
-    func returnSaleArray(_ allItems: [Item]) -> [Item] {
-        return allItems.filter { item in
-            if let sale = item.sale {
-                return sale.intValue != 0
-            }
-            return false
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let allItemsList = Items.sharedInstance.allItems
-        saleItemsList = returnSaleArray(allItemsList)
-        let individualData = saleItemsList[indexPath.row]
+        let individualData = viewModel.item(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sellCellIdentifier", for: indexPath)
         
         if let itemImage = cell.viewWithTag(601) as? UIImageView,
@@ -54,22 +34,20 @@ class SaleViewController: UIViewController, UICollectionViewDataSource, UICollec
                 itemImage.image = UIImage(data: data)
             }
             itemName.text = individualData.itemName
-            itemPrice.text = showPrice(individualData.price)
+            itemPrice.text = viewModel.formatPrice(individualData.price)
         }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let allItemsList = Items.sharedInstance.allItems
-        saleItemsList = returnSaleArray(allItemsList)
-        return saleItemsList.count
+        return viewModel.numberOfItems()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let singleItemView = storyboard?.instantiateViewController(withIdentifier: "singleItemViewStoryBoardIdentifier") as? SingleItemViewController else { return }
         
-        let individualData = saleItemsList[indexPath.row]
+        let individualData = viewModel.item(at: indexPath.row)
         
         singleItemView.itemObjectReceived = individualData
         
@@ -85,9 +63,5 @@ class SaleViewController: UIViewController, UICollectionViewDataSource, UICollec
         singleItemView.setItemQuality = individualData.quality
         
         navigationController?.pushViewController(singleItemView, animated: true)
-    }
-    
-    func showPrice(_ price: Double) -> String {
-        return "$\(price)"
     }
 }

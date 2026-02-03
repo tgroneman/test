@@ -2,14 +2,17 @@
 //  CategoryItemsViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
 
 class CategoryItemsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    private(set) var categoryItemsList: [Item] = []
+    // MARK: - ViewModel
+    private let viewModel = CategoryItemsViewModel()
+    
+    // MARK: - IBOutlets
     @IBOutlet var categoryName: UILabel!
     @IBOutlet var categoryCollectionView: UICollectionView!
     
@@ -21,13 +24,14 @@ class CategoryItemsViewController: UIViewController, UICollectionViewDataSource,
         
         categoryCollectionView.dataSource = self
         categoryCollectionView.delegate = self
-        categoryItemsList = receivedCategoryItemsList
-        categoryName.text = receivedCategoryName
-        navigationItem.title = receivedCategoryName
+        
+        viewModel.configure(with: receivedCategoryItemsList, categoryName: receivedCategoryName ?? "")
+        categoryName.text = viewModel.categoryName.value
+        navigationItem.title = viewModel.categoryName.value
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let individualData = categoryItemsList[indexPath.row]
+        let individualData = viewModel.item(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCellIdentifier", for: indexPath)
         
         if let itemImage = cell.viewWithTag(1001) as? UIImageView,
@@ -38,20 +42,20 @@ class CategoryItemsViewController: UIViewController, UICollectionViewDataSource,
                 itemImage.image = UIImage(data: data)
             }
             itemName.text = individualData.itemName
-            itemPrice.text = showPrice(individualData.price)
+            itemPrice.text = viewModel.formatPrice(individualData.price)
         }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categoryItemsList.count
+        return viewModel.numberOfItems()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let singleItemView = storyboard?.instantiateViewController(withIdentifier: "singleItemViewStoryBoardIdentifier") as? SingleItemViewController else { return }
         
-        let individualData = categoryItemsList[indexPath.row]
+        let individualData = viewModel.item(at: indexPath.row)
         
         singleItemView.itemObjectReceived = individualData
         
@@ -67,9 +71,5 @@ class CategoryItemsViewController: UIViewController, UICollectionViewDataSource,
         singleItemView.setItemQuality = individualData.quality
         
         navigationController?.pushViewController(singleItemView, animated: true)
-    }
-    
-    func showPrice(_ price: Double) -> String {
-        return "$\(price)"
     }
 }

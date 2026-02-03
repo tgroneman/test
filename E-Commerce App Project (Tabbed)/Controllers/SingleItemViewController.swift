@@ -2,13 +2,17 @@
 //  SingleItemViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
 
 class SingleItemViewController: ViewController {
     
+    // MARK: - ViewModel
+    private let viewModel = SingleItemViewModel()
+    
+    // MARK: - IBOutlets
     @IBOutlet var itemImage: UIImageView!
     @IBOutlet var itemName: UILabel!
     @IBOutlet var itemCategory: UILabel!
@@ -29,95 +33,83 @@ class SingleItemViewController: ViewController {
     
     var itemAlreadyAddedAlert: UIAlertController!
     var itemObjectReceived: Item?
-    var theItemObject: Item?
-    
-    private var checkoutCart: ShoppingCart!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkoutCart = ShoppingCart.sharedInstance
-        theItemObject = itemObjectReceived
         
-        addToCartStatusoutlet.isSelected = checkoutCart.containsItem(theItemObject!)
+        if let item = itemObjectReceived {
+            viewModel.configure(with: item)
+        }
         
+        setupUI()
+        setupAlert()
+        bindViewModel()
+    }
+    
+    private func setupUI() {
         if let imageData = setItemImage {
             itemImage.image = UIImage(data: imageData)
         }
         itemName.text = setItemName
         itemCategory.text = setItemCategory
         itemID.text = setItemID?.stringValue
-        itemPrice.text = showPrice(setItemPrice)
+        itemPrice.text = "$\(setItemPrice ?? 0)"
         itemBrand.text = setItemBrand
         itemQuality.text = setItemQuality
-        
+    }
+    
+    private func setupAlert() {
         itemAlreadyAddedAlert = UIAlertController(
             title: "Already Added To The Cart",
             message: "Item Will Be Added To Your Cart Again",
             preferredStyle: .alert
         )
         
-        let yesButton = UIAlertAction(title: "Got it!", style: .default, handler: nil)
+        let dismissAction = UIAlertAction(title: "Got it!", style: .default, handler: nil)
         
-        let noButton = UIAlertAction(title: "Add To Cart Again!", style: .default) { [weak self] _ in
-            guard let self = self, let item = self.theItemObject else { return }
-            let cart = ShoppingCart.sharedInstance
-            cart.addItem(item)
-            self.addToCartStatusoutlet.isSelected = true
+        let addAgainAction = UIAlertAction(title: "Add To Cart Again!", style: .default) { [weak self] _ in
+            self?.viewModel.addToCart()
         }
         
-        itemAlreadyAddedAlert.addAction(yesButton)
-        itemAlreadyAddedAlert.addAction(noButton)
+        itemAlreadyAddedAlert.addAction(dismissAction)
+        itemAlreadyAddedAlert.addAction(addAgainAction)
+    }
+    
+    private func bindViewModel() {
+        viewModel.isInCart.bind { [weak self] isInCart in
+            guard let self = self else { return }
+            self.addToCartStatusoutlet.isSelected = isInCart
+            self.removeFromCartOutlet.isHidden = !isInCart
+            self.addToCartStatusoutlet.setTitle(isInCart ? "Add To Cart Again" : "Add To Cart", for: .normal)
+            if isInCart {
+                self.addToCartStatusoutlet.backgroundColor = .green
+                self.addToCartStatusoutlet.setTitleColor(.black, for: .normal)
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let item = theItemObject {
-            addToCartStatusoutlet.isSelected = checkoutCart.containsItem(item)
-        }
-        removeFromCartOutlet.isHidden = !addToCartStatusoutlet.isSelected
+        viewModel.refreshCartStatus()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if !addToCartStatusoutlet.isSelected {
-            removeFromCartOutlet.isHidden = true
-            addToCartStatusoutlet.setTitle("Add To Cart", for: .normal)
-        } else {
-            removeFromCartOutlet.isHidden = false
-            addToCartStatusoutlet.setTitle("Add To Cart Again", for: .normal)
-        }
+        viewModel.refreshCartStatus()
     }
     
     @IBAction func addToCartButton(_ sender: UIButton) {
-        guard let item = theItemObject else { return }
-        
-        if !addToCartStatusoutlet.isSelected {
-            checkoutCart.addItem(item)
-            addToCartStatusoutlet.isSelected = true
-            removeFromCartOutlet.isHidden = false
-            sender.setTitle("Again Add To Cart", for: .normal)
-            sender.backgroundColor = .green
-            sender.setTitleColor(.black, for: .normal)
+        if !viewModel.isInCart.value {
+            viewModel.addToCart()
         } else {
-            removeFromCartOutlet.isHidden = false
             present(itemAlreadyAddedAlert, animated: true, completion: nil)
-            sender.setTitle("Again Add To Cart", for: .normal)
-            sender.backgroundColor = .green
-            sender.setTitleColor(.black, for: .normal)
         }
     }
     
     @IBAction func removeFromCartButton(_ sender: UIButton) {
-        guard let item = theItemObject else { return }
-        checkoutCart.removeItem(item)
-        addToCartStatusoutlet.isSelected = false
+        viewModel.removeFromCart()
         sender.setTitle("Add To Cart", for: .normal)
         sender.setImage(UIImage(named: "addToCart-icon-40.png"), for: .normal)
         sender.backgroundColor = .blue
-    }
-    
-    func showPrice(_ price: NSNumber?) -> String {
-        guard let price = price else { return "$0" }
-        return "$\(price)"
     }
 }
