@@ -13,7 +13,7 @@ import UIKit
     @objc func requiredMinLengthValidator(_ requiredErrorMessage: String, integerforMinLength minLength: Int, minLengthErrorMessage: String, withLabelForValidationRules validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
         validator.addValidationToEnsurePresence(withInvalidMessage: NSLocalizedString(requiredErrorMessage, comment: ""))
-        validator.addValidationToEnsureMinimumLength(UInt(minLength), invalidMessage: NSLocalizedString(minLengthErrorMessage, comment: ""))
+        validator.addValidation(toEnsureMinimumLength: UInt(minLength), invalidMessage: NSLocalizedString(minLengthErrorMessage, comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
             case .validationStateValid:
@@ -31,7 +31,7 @@ import UIKit
     
     @objc func equalityValidator(_ password: Any, with validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
-        validator.addValidationToEnsureInstance(isTheSameAs: password, invalidMessage: NSLocalizedString("Should be equal to 'password'", comment: ""))
+        validator.addValidation(toEnsureInstanceIsTheSameAs: password, invalidMessage: NSLocalizedString("Should be equal to 'password'", comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
             case .validationStateValid:
@@ -103,7 +103,7 @@ import UIKit
     
     @objc func minLengthValidator(_ errorMessage: String, withLabelForValidationRules validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
-        validator.addValidationToEnsureMinimumLength(6, invalidMessage: NSLocalizedString(errorMessage, comment: ""))
+        validator.addValidation(toEnsureMinimumLength: 6, invalidMessage: NSLocalizedString(errorMessage, comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
             case .validationStateValid:
