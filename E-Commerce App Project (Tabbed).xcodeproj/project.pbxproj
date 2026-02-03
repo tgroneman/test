@@ -75,6 +75,24 @@
 		0DE2D9A32196225600B4649D /* SingleItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE2D9A22196225600B4649D /* SingleItemViewController.m */; };
 		0DE2D9A62196A14500B4649D /* ShoppingCart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE2D9A52196A14500B4649D /* ShoppingCart.m */; };
 		0DF1F6A621A099710086CF2D /* ThankYouViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF1F6A521A099710086CF2D /* ThankYouViewController.m */; };
+		6EA3DE2D8F7C472D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA26A21C19FF4346 /* Item.swift */; };
+		57E4EE0A860A4E81 /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8949719F29A4ABE /* Items.swift */; };
+		374CA145458A4275 /* CategoryItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA71242C4DCF41A0 /* CategoryItemList.swift */; };
+		FCD9F788A9684F39 /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD490E1C34574638 /* ShoppingCart.swift */; };
+		9246860F92204D20 /* AccountOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F9044E0DFD4AB0 /* AccountOperations.swift */; };
+		94DA4C808B62486E /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E24318E26D842CF /* Validation.swift */; };
+		947DC0DBD8044BED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75747C93157142E3 /* AppDelegate.swift */; };
+		58D326D910C44EE3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EE141B5BB4383 /* ViewController.swift */; };
+		F9C685ADC1ED4B96 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423C55988CA440BF /* HomeViewController.swift */; };
+		80D503E61DAB470C /* SaleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F5FD08DC564747 /* SaleViewController.swift */; };
+		DB8FDB4364D345AA /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DF61FE77194B3E /* CartViewController.swift */; };
+		9FEFEF7AF2FD4F66 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1203A22C6F39457F /* AccountViewController.swift */; };
+		5360E1FE26EC454F /* SingleItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4353CC88935942FA /* SingleItemViewController.swift */; };
+		7D6011B8C0EF4C40 /* CategoryItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC95DA5A08F4348 /* CategoryItemsViewController.swift */; };
+		843F63C81BD342E9 /* AccountLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CD4731891D4C88 /* AccountLoginViewController.swift */; };
+		082B0F61712048D1 /* AccountCRUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB94AB6713E4427 /* AccountCRUDViewController.swift */; };
+		E1C9888C69334B1B /* CheckOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8184E43AB46A4DCF /* CheckOutViewController.swift */; };
+		E4A887D28ED140C5 /* ThankYouViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097B44A458B045B8 /* ThankYouViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,6 +222,25 @@
 		0DE2D9A52196A14500B4649D /* ShoppingCart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShoppingCart.m; sourceTree = "<group>"; };
 		0DF1F6A421A099710086CF2D /* ThankYouViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThankYouViewController.h; sourceTree = "<group>"; };
 		0DF1F6A521A099710086CF2D /* ThankYouViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThankYouViewController.m; sourceTree = "<group>"; };
+		DA26A21C19FF4346 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		C8949719F29A4ABE /* Items.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
+		BA71242C4DCF41A0 /* CategoryItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItemList.swift; sourceTree = "<group>"; };
+		AD490E1C34574638 /* ShoppingCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCart.swift; sourceTree = "<group>"; };
+		23F9044E0DFD4AB0 /* AccountOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOperations.swift; sourceTree = "<group>"; };
+		8E24318E26D842CF /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
+		75747C93157142E3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		615EE141B5BB4383 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		423C55988CA440BF /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		D7F5FD08DC564747 /* SaleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleViewController.swift; sourceTree = "<group>"; };
+		28DF61FE77194B3E /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
+		1203A22C6F39457F /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		4353CC88935942FA /* SingleItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleItemViewController.swift; sourceTree = "<group>"; };
+		FFC95DA5A08F4348 /* CategoryItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItemsViewController.swift; sourceTree = "<group>"; };
+		B4CD4731891D4C88 /* AccountLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLoginViewController.swift; sourceTree = "<group>"; };
+		EDB94AB6713E4427 /* AccountCRUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCRUDViewController.swift; sourceTree = "<group>"; };
+		8184E43AB46A4DCF /* CheckOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutViewController.swift; sourceTree = "<group>"; };
+		097B44A458B045B8 /* ThankYouViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouViewController.swift; sourceTree = "<group>"; };
+		1CF8B1B5BC3D4633 /* E-Commerce-App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "E-Commerce-App-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -829,6 +866,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "learning-ios-app-development.E-Commerce-App-Project--Tabbed-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+								SWIFT_OBJC_BRIDGING_HEADER = "E-Commerce App Project (Tabbed)/E-Commerce-App-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -845,6 +884,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "learning-ios-app-development.E-Commerce-App-Project--Tabbed-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+								SWIFT_OBJC_BRIDGING_HEADER = "E-Commerce App Project (Tabbed)/E-Commerce-App-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
