@@ -93,6 +93,17 @@
 		082B0F61712048D1 /* AccountCRUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB94AB6713E4427 /* AccountCRUDViewController.swift */; };
 		E1C9888C69334B1B /* CheckOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8184E43AB46A4DCF /* CheckOutViewController.swift */; };
 		E4A887D28ED140C5 /* ThankYouViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097B44A458B045B8 /* ThankYouViewController.swift */; };
+		BFOBS001A1B2C3D4 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMOBS001A1B2C3D4 /* Observable.swift */; };
+		BFHOME001A1B2C3D5 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMHOME001A1B2C3D5 /* HomeViewModel.swift */; };
+		BFSALE001A1B2C3D6 /* SaleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMSALE001A1B2C3D6 /* SaleViewModel.swift */; };
+		BFCART001A1B2C3D7 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMCART001A1B2C3D7 /* CartViewModel.swift */; };
+		BFACCT001A1B2C3D8 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMACCT001A1B2C3D8 /* AccountViewModel.swift */; };
+		BFSING001A1B2C3D9 /* SingleItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMSING001A1B2C3D9 /* SingleItemViewModel.swift */; };
+		BFCATI001A1B2C3DA /* CategoryItemsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMCATI001A1B2C3DA /* CategoryItemsViewModel.swift */; };
+		BFLOGIN01A1B2C3DB /* AccountLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMLOGIN01A1B2C3DB /* AccountLoginViewModel.swift */; };
+		BFCRUD001A1B2C3DC /* AccountCRUDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMCRUD001A1B2C3DC /* AccountCRUDViewModel.swift */; };
+		BFCHEK001A1B2C3DD /* CheckOutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMCHEK001A1B2C3DD /* CheckOutViewModel.swift */; };
+		BFTHNK001A1B2C3DE /* ThankYouViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = VMTHNK001A1B2C3DE /* ThankYouViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -241,6 +252,17 @@
 		8184E43AB46A4DCF /* CheckOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutViewController.swift; sourceTree = "<group>"; };
 		097B44A458B045B8 /* ThankYouViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouViewController.swift; sourceTree = "<group>"; };
 		1CF8B1B5BC3D4633 /* E-Commerce-App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "E-Commerce-App-Bridging-Header.h"; sourceTree = "<group>"; };
+		VMOBS001A1B2C3D4 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		VMHOME001A1B2C3D5 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		VMSALE001A1B2C3D6 /* SaleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleViewModel.swift; sourceTree = "<group>"; };
+		VMCART001A1B2C3D7 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
+		VMACCT001A1B2C3D8 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
+		VMSING001A1B2C3D9 /* SingleItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleItemViewModel.swift; sourceTree = "<group>"; };
+		VMCATI001A1B2C3DA /* CategoryItemsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItemsViewModel.swift; sourceTree = "<group>"; };
+		VMLOGIN01A1B2C3DB /* AccountLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLoginViewModel.swift; sourceTree = "<group>"; };
+		VMCRUD001A1B2C3DC /* AccountCRUDViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCRUDViewModel.swift; sourceTree = "<group>"; };
+		VMCHEK001A1B2C3DD /* CheckOutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutViewModel.swift; sourceTree = "<group>"; };
+		VMTHNK001A1B2C3DE /* ThankYouViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -441,6 +463,7 @@
 				0D49CDD6219F558000890606 /* Assets */,
 				0D49CDA0219C204E00890606 /* Supporting Libraries */,
 				0D76BAD72193253B00783E47 /* Controllers */,
+				VMGRP001A1B2C3DF /* ViewModels */,
 				0D7F8348219226890026FDEE /* Classes */,
 				0D7F8343219224360026FDEE /* data.json */,
 				0D8117C82190BBF4009C7DD1 /* Images */,
@@ -495,6 +518,24 @@
 				0D8117CD21918D47009C7DD1 /* home-icon-40.png */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		VMGRP001A1B2C3DF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				VMOBS001A1B2C3D4 /* Observable.swift */,
+				VMHOME001A1B2C3D5 /* HomeViewModel.swift */,
+				VMSALE001A1B2C3D6 /* SaleViewModel.swift */,
+				VMCART001A1B2C3D7 /* CartViewModel.swift */,
+				VMACCT001A1B2C3D8 /* AccountViewModel.swift */,
+				VMSING001A1B2C3D9 /* SingleItemViewModel.swift */,
+				VMCATI001A1B2C3DA /* CategoryItemsViewModel.swift */,
+				VMLOGIN01A1B2C3DB /* AccountLoginViewModel.swift */,
+				VMCRUD001A1B2C3DC /* AccountCRUDViewModel.swift */,
+				VMCHEK001A1B2C3DD /* CheckOutViewModel.swift */,
+				VMTHNK001A1B2C3DE /* ThankYouViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -688,6 +729,17 @@
 				0D66BD3D21A2EDC9006D2488 /* TADotView.m in Sources */,
 				0D66BD6221A2FEDD006D2488 /* CategoryItemsViewController.m in Sources */,
 				0D49CD9F219A0B3600890606 /* AccountOperations.m in Sources */,
+				BFOBS001A1B2C3D4 /* Observable.swift in Sources */,
+				BFHOME001A1B2C3D5 /* HomeViewModel.swift in Sources */,
+				BFSALE001A1B2C3D6 /* SaleViewModel.swift in Sources */,
+				BFCART001A1B2C3D7 /* CartViewModel.swift in Sources */,
+				BFACCT001A1B2C3D8 /* AccountViewModel.swift in Sources */,
+				BFSING001A1B2C3D9 /* SingleItemViewModel.swift in Sources */,
+				BFCATI001A1B2C3DA /* CategoryItemsViewModel.swift in Sources */,
+				BFLOGIN01A1B2C3DB /* AccountLoginViewModel.swift in Sources */,
+				BFCRUD001A1B2C3DC /* AccountCRUDViewModel.swift in Sources */,
+				BFCHEK001A1B2C3DD /* CheckOutViewModel.swift in Sources */,
+				BFTHNK001A1B2C3DE /* ThankYouViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
