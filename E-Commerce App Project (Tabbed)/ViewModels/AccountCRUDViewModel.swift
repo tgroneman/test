@@ -93,19 +93,25 @@ class AccountCRUDViewModel {
         
         registrationState.value = .loading
         
-        accountOperations.registerUser(
-            firstName: firstName.value,
-            lastName: lastName.value,
-            email: email.value,
-            password: password.value,
-            confirmPassword: confirmPassword.value,
-            phone: phone.value,
-            country: country.value,
-            state: state.value,
-            city: city.value,
-            postalCode: postalCode.value,
-            address: address.value
-        ) { [weak self] error, success, customErrorMessage in
+        let encryptedPassword = accountOperations.sha1(password.value)
+        let encryptedConfirmPassword = accountOperations.sha1(confirmPassword.value)
+        
+        let dataToSend: [String: Any] = [
+            "actionRequest": "REGISTER_USER",
+            "firstName": firstName.value,
+            "lastName": lastName.value,
+            "email": email.value,
+            "password": encryptedPassword,
+            "confirmPassword": encryptedConfirmPassword,
+            "phone": phone.value,
+            "country": country.value,
+            "state": state.value,
+            "city": city.value,
+            "postalCode": postalCode.value,
+            "address": address.value
+        ]
+        
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
             guard let self = self else { return }
             
             if success && customErrorMessage == "Registraition Successful" {
@@ -128,19 +134,25 @@ class AccountCRUDViewModel {
         
         editState.value = .loading
         
-        accountOperations.updateUser(
-            firstName: firstName.value,
-            lastName: lastName.value,
-            email: existingUserEmail,
-            password: password.value,
-            confirmPassword: confirmPassword.value,
-            phone: phone.value,
-            country: country.value,
-            state: state.value,
-            city: city.value,
-            postalCode: postalCode.value,
-            address: address.value
-        ) { [weak self] error, success, customErrorMessage in
+        let encryptedPassword = accountOperations.sha1(password.value)
+        let encryptedConfirmPassword = accountOperations.sha1(confirmPassword.value)
+        
+        let dataToSend: [String: Any] = [
+            "actionRequest": "EDIT_USER",
+            "firstName": firstName.value,
+            "lastName": lastName.value,
+            "email": existingUserEmail,
+            "password": encryptedPassword,
+            "confirmPassword": encryptedConfirmPassword,
+            "phone": phone.value,
+            "country": country.value,
+            "state": state.value,
+            "city": city.value,
+            "postalCode": postalCode.value,
+            "address": address.value
+        ]
+        
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
             guard let self = self else { return }
             
             if success && customErrorMessage == "Update Successful" {

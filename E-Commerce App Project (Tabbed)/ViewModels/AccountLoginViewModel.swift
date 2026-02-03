@@ -42,7 +42,14 @@ class AccountLoginViewModel {
         
         loginState.value = .loading
         
-        accountOperations.loginUser(email: email.value, password: password.value) { [weak self] error, success, customErrorMessage in
+        let encryptedPassword = accountOperations.sha1(password.value)
+        let dataToSend: [String: Any] = [
+            "actionRequest": "CHECK_USER_LOGIN",
+            "email": email.value,
+            "password": encryptedPassword
+        ]
+        
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
             guard let self = self else { return }
             
             if success {
