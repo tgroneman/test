@@ -337,6 +337,16 @@
 		0D76BAD72193253B00783E47 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				423C55988CA440BF /* HomeViewController.swift */,
+				D7F5FD08DC564747 /* SaleViewController.swift */,
+				28DF61FE77194B3E /* CartViewController.swift */,
+				1203A22C6F39457F /* AccountViewController.swift */,
+				4353CC88935942FA /* SingleItemViewController.swift */,
+				FFC95DA5A08F4348 /* CategoryItemsViewController.swift */,
+				B4CD4731891D4C88 /* AccountLoginViewController.swift */,
+				EDB94AB6713E4427 /* AccountCRUDViewController.swift */,
+				8184E43AB46A4DCF /* CheckOutViewController.swift */,
+				097B44A458B045B8 /* ThankYouViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -344,6 +354,12 @@
 		0D7F8348219226890026FDEE /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DA26A21C19FF4346 /* Item.swift */,
+				C8949719F29A4ABE /* Items.swift */,
+				BA71242C4DCF41A0 /* CategoryItemList.swift */,
+				AD490E1C34574638 /* ShoppingCart.swift */,
+				23F9044E0DFD4AB0 /* AccountOperations.swift */,
+				8E24318E26D842CF /* Validation.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -379,6 +395,9 @@
 				0D7F8348219226890026FDEE /* Classes */,
 				0D7F8343219224360026FDEE /* data.json */,
 				0D8117C82190BBF4009C7DD1 /* Images */,
+				75747C93157142E3 /* AppDelegate.swift */,
+				615EE141B5BB4383 /* ViewController.swift */,
+				1CF8B1B5BC3D4633 /* E-Commerce-App-Bridging-Header.h */,
 				0D81179C2190BA89009C7DD1 /* Main.storyboard */,
 				0D81179F2190BA8B009C7DD1 /* Assets.xcassets */,
 				0D8117A12190BA8B009C7DD1 /* LaunchScreen.storyboard */,
