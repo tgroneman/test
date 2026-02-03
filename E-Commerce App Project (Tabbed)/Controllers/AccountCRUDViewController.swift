@@ -2,13 +2,17 @@
 //  AccountCRUDViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
 
 class AccountCRUDViewController: UIViewController {
     
+    // MARK: - ViewModel
+    private let viewModel = AccountCRUDViewModel()
+    
+    // MARK: - IBOutlets (Registration)
     @IBOutlet var firstName: UITextField!
     @IBOutlet var lastName: UITextField!
     @IBOutlet var email: UITextField!
@@ -22,6 +26,7 @@ class AccountCRUDViewController: UIViewController {
     @IBOutlet var address: UITextField!
     @IBOutlet var validationStatus: UILabel!
     
+    // MARK: - IBOutlets (Edit Account)
     @IBOutlet var editAccountFirstName: UITextField!
     @IBOutlet var editAccountLastName: UITextField!
     @IBOutlet var editAccountEmail: UITextField!
@@ -36,18 +41,23 @@ class AccountCRUDViewController: UIViewController {
     @IBOutlet var editAccountValidationStatus: UILabel!
     
     var registrationComplete: UIAlertController!
-    
-    private var accountOperationsObj: AccountOperations!
     private var validatorObj: Validation!
-    private var defaults: UserDefaults!
-    private var userData: [String: Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         validationStatus.isHidden = true
-        accountOperationsObj = AccountOperations()
         validatorObj = Validation()
         
+        setupValidators()
+        setupRegistrationAlert()
+        bindViewModel()
+        
+        if viewModel.isLoggedIn.value {
+            loadExistingUserData()
+        }
+    }
+    
+    private func setupValidators() {
         firstName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
         editAccountFirstName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
         
@@ -77,25 +87,9 @@ class AccountCRUDViewController: UIViewController {
         editAccountCity.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
         editAccountPostalCode.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
         editAccountAddress.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        
-        defaults = UserDefaults.standard
-        if !defaults.bool(forKey: "SeesionUserLoggedIN") {
-            print("user not logged IN")
-        } else {
-            print("\(defaults.value(forKey: "LoggedInUsersDetail") ?? "")")
-            userData = defaults.dictionary(forKey: "LoggedInUsersDetail")
-            
-            editAccountFirstName.text = userData?["firstName"] as? String
-            editAccountLastName.text = userData?["lastName"] as? String
-            editAccountEmail.text = userData?["usersEmail"] as? String
-            editAccountPhone.text = userData?["phone"] as? String
-            editAccountCountry.text = userData?["country"] as? String
-            editAccountState.text = userData?["state"] as? String
-            editAccountCity.text = userData?["city"] as? String
-            editAccountPostalCode.text = userData?["postalCode"] as? String
-            editAccountAddress.text = userData?["address"] as? String
-        }
-        
+    }
+    
+    private func setupRegistrationAlert() {
         registrationComplete = UIAlertController(
             title: "Registered!",
             message: "You've Successfully Registered!",
@@ -109,115 +103,128 @@ class AccountCRUDViewController: UIViewController {
         registrationComplete.addAction(yesButton)
     }
     
-    func registrationAction(_ sender: UIButton) {
-        let encryptedPassword = accountOperationsObj.sha1(password.text ?? "")
-        let encryptedConfirmedPassword = accountOperationsObj.sha1(confirmPassword.text ?? "")
-        let secureKeyForServerAccess = "sdfsdfsd38792F423F4528482B4D6250655368566D597133743677397A24432646294A40kjsdhfkjsdhf"
-        
-        let dataToSend: [String: Any] = [
-            "secureKeyForServerAccess_Enabled": secureKeyForServerAccess,
-            "actionRequest": "REGISTER_USER",
-            "firstName": firstName.text ?? "",
-            "lastName": lastName.text ?? "",
-            "email": email.text ?? "",
-            "password": encryptedPassword,
-            "confirmPassword": encryptedConfirmedPassword,
-            "phone": phone.text ?? "",
-            "country": country.text ?? "",
-            "state": state.text ?? "",
-            "city": city.text ?? "",
-            "postalCode": postalCode.text ?? "",
-            "address": address.text ?? ""
-        ]
-        
-        accountOperationsObj.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
-            guard let self = self else { return }
-            
-            if success {
-                if customErrorMessage == "Registraition Successful" {
-                    sender.setTitle("Registered", for: .normal)
-                    sender.backgroundColor = .blue
-                    self.present(self.registrationComplete, animated: true, completion: nil)
-                } else {
-                    self.generalAlerts("Alert!", withMessage: customErrorMessage ?? "", withYesActionTitle: "Cancel Registration!", withNoActionTitle: "Fix it!")
-                }
-            } else {
-                self.generalAlerts("Alert!", withMessage: customErrorMessage ?? "", withYesActionTitle: "Cancel Registration!", withNoActionTitle: "Fix it!")
-                sender.setTitle("Try Again", for: .normal)
-            }
+    private func bindViewModel() {
+        viewModel.firstName.bindWithoutFire { [weak self] value in
+            self?.editAccountFirstName.text = value
         }
+        viewModel.lastName.bindWithoutFire { [weak self] value in
+            self?.editAccountLastName.text = value
+        }
+        viewModel.email.bindWithoutFire { [weak self] value in
+            self?.editAccountEmail.text = value
+        }
+        viewModel.phone.bindWithoutFire { [weak self] value in
+            self?.editAccountPhone.text = value
+        }
+        viewModel.country.bindWithoutFire { [weak self] value in
+            self?.editAccountCountry.text = value
+        }
+        viewModel.state.bindWithoutFire { [weak self] value in
+            self?.editAccountState.text = value
+        }
+        viewModel.city.bindWithoutFire { [weak self] value in
+            self?.editAccountCity.text = value
+        }
+        viewModel.postalCode.bindWithoutFire { [weak self] value in
+            self?.editAccountPostalCode.text = value
+        }
+        viewModel.address.bindWithoutFire { [weak self] value in
+            self?.editAccountAddress.text = value
+        }
+    }
+    
+    private func loadExistingUserData() {
+        viewModel.loadExistingUserData()
+        editAccountFirstName.text = viewModel.firstName.value
+        editAccountLastName.text = viewModel.lastName.value
+        editAccountEmail.text = viewModel.email.value
+        editAccountPhone.text = viewModel.phone.value
+        editAccountCountry.text = viewModel.country.value
+        editAccountState.text = viewModel.state.value
+        editAccountCity.text = viewModel.city.value
+        editAccountPostalCode.text = viewModel.postalCode.value
+        editAccountAddress.text = viewModel.address.value
     }
     
     @IBAction func registerAccount(_ sender: UIButton) {
-        if firstName.hasText && lastName.hasText && email.hasText && password.hasText && confirmPassword.hasText && phone.hasText && country.hasText && state.hasText && city.hasText && postalCode.hasText && address.hasText {
-            if accountOperationsObj.validateEmailAccount(email.text ?? "") {
-                if password.text == confirmPassword.text {
-                    registrationAction(sender)
-                } else {
-                    generalAlerts("Password Mismatch!", withMessage: "Confirm password and password Must be same", withYesActionTitle: "Log In!", withNoActionTitle: "Back To Form!")
-                }
-            } else {
-                generalAlerts("Invalid Email!", withMessage: "Please Insert a valid email address", withYesActionTitle: "Cancel Registration!", withNoActionTitle: "Ok!")
-            }
-        } else {
+        guard firstName.hasText && lastName.hasText && email.hasText && password.hasText && confirmPassword.hasText && phone.hasText && country.hasText && state.hasText && city.hasText && postalCode.hasText && address.hasText else {
             generalAlerts("Empty Form", withMessage: "Please complete the form!", withYesActionTitle: "Already Registered!", withNoActionTitle: "Got it!")
+            return
         }
-    }
-    
-    func editAction(_ sender: UIButton) {
-        let encryptedPassword = accountOperationsObj.sha1(editAccountPassword.text ?? "")
-        let encryptedConfirmedPassword = accountOperationsObj.sha1(editAccountConfirmPassword.text ?? "")
-        let secureKeyForServerAccess = "sdfsdfsd38792F423F4528482B4D6250655368566D597133743677397A24432646294A40kjsdhfkjsdhf"
         
-        let dataToSend: [String: Any] = [
-            "secureKeyForServerAccess_Enabled": secureKeyForServerAccess,
-            "actionRequest": "EDIT_USER",
-            "firstName": editAccountFirstName.text ?? "",
-            "lastName": editAccountLastName.text ?? "",
-            "email": userData?["usersEmail"] as? String ?? "",
-            "password": encryptedPassword,
-            "confirmPassword": encryptedConfirmedPassword,
-            "phone": editAccountPhone.text ?? "",
-            "country": editAccountCity.text ?? "",
-            "state": editAccountState.text ?? "",
-            "city": editAccountCity.text ?? "",
-            "postalCode": editAccountPostalCode.text ?? "",
-            "address": editAccountAddress.text ?? ""
-        ]
+        guard viewModel.validateEmail(email.text ?? "") else {
+            generalAlerts("Invalid Email!", withMessage: "Please Insert a valid email address", withYesActionTitle: "Cancel Registration!", withNoActionTitle: "Ok!")
+            return
+        }
         
-        accountOperationsObj.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
+        guard password.text == confirmPassword.text else {
+            generalAlerts("Password Mismatch!", withMessage: "Confirm password and password Must be same", withYesActionTitle: "Log In!", withNoActionTitle: "Back To Form!")
+            return
+        }
+        
+        viewModel.firstName.value = firstName.text ?? ""
+        viewModel.lastName.value = lastName.text ?? ""
+        viewModel.email.value = email.text ?? ""
+        viewModel.password.value = password.text ?? ""
+        viewModel.confirmPassword.value = confirmPassword.text ?? ""
+        viewModel.phone.value = phone.text ?? ""
+        viewModel.country.value = country.text ?? ""
+        viewModel.state.value = state.text ?? ""
+        viewModel.city.value = city.text ?? ""
+        viewModel.postalCode.value = postalCode.text ?? ""
+        viewModel.address.value = address.text ?? ""
+        
+        viewModel.register { [weak self] success, message in
             guard let self = self else { return }
-            
             if success {
-                if customErrorMessage == "Update Successful" {
-                    sender.setTitle("Account Updated!", for: .normal)
-                    sender.backgroundColor = .blue
-                    self.generalAlerts("Account Updated!", withMessage: "Your Account Have Successfully Updated!", withYesActionTitle: "Log In!", withNoActionTitle: "OK")
-                    self.present(self.registrationComplete, animated: true, completion: nil)
-                } else {
-                    self.generalAlerts("Alert!", withMessage: customErrorMessage ?? "", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Fix it!")
-                }
+                sender.setTitle("Registered", for: .normal)
+                sender.backgroundColor = .blue
+                self.present(self.registrationComplete, animated: true, completion: nil)
             } else {
-                self.generalAlerts("Alert!", withMessage: customErrorMessage ?? "", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Fix it!")
+                self.generalAlerts("Alert!", withMessage: message ?? "", withYesActionTitle: "Cancel Registration!", withNoActionTitle: "Fix it!")
                 sender.setTitle("Try Again", for: .normal)
-                sender.backgroundColor = .red
             }
         }
     }
     
     @IBAction func editAccount(_ sender: UIButton) {
-        if editAccountFirstName.hasText && editAccountLastName.hasText && editAccountEmail.hasText && editAccountPassword.hasText && editAccountConfirmPassword.hasText && editAccountPhone.hasText && editAccountCountry.hasText && editAccountState.hasText && editAccountCity.hasText && editAccountPostalCode.hasText && editAccountAddress.hasText {
-            if accountOperationsObj.validateEmailAccount(editAccountEmail.text ?? "") {
-                if editAccountPassword.text == editAccountConfirmPassword.text {
-                    editAction(sender)
-                } else {
-                    generalAlerts("Password Mismatch!", withMessage: "Confirm password and password Must be same", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Back To Form!")
-                }
-            } else {
-                generalAlerts("Invalid Email!", withMessage: "Please Insert a valid email address", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Ok!")
-            }
-        } else {
+        guard editAccountFirstName.hasText && editAccountLastName.hasText && editAccountEmail.hasText && editAccountPassword.hasText && editAccountConfirmPassword.hasText && editAccountPhone.hasText && editAccountCountry.hasText && editAccountState.hasText && editAccountCity.hasText && editAccountPostalCode.hasText && editAccountAddress.hasText else {
             generalAlerts("Empty Form", withMessage: "Please complete the form!", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Got it!")
+            return
+        }
+        
+        guard viewModel.validateEmail(editAccountEmail.text ?? "") else {
+            generalAlerts("Invalid Email!", withMessage: "Please Insert a valid email address", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Ok!")
+            return
+        }
+        
+        guard editAccountPassword.text == editAccountConfirmPassword.text else {
+            generalAlerts("Password Mismatch!", withMessage: "Confirm password and password Must be same", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Back To Form!")
+            return
+        }
+        
+        viewModel.firstName.value = editAccountFirstName.text ?? ""
+        viewModel.lastName.value = editAccountLastName.text ?? ""
+        viewModel.password.value = editAccountPassword.text ?? ""
+        viewModel.confirmPassword.value = editAccountConfirmPassword.text ?? ""
+        viewModel.phone.value = editAccountPhone.text ?? ""
+        viewModel.country.value = editAccountCountry.text ?? ""
+        viewModel.state.value = editAccountState.text ?? ""
+        viewModel.city.value = editAccountCity.text ?? ""
+        viewModel.postalCode.value = editAccountPostalCode.text ?? ""
+        viewModel.address.value = editAccountAddress.text ?? ""
+        
+        viewModel.updateAccount { [weak self] success, message in
+            guard let self = self else { return }
+            if success {
+                sender.setTitle("Account Updated!", for: .normal)
+                sender.backgroundColor = .blue
+                self.generalAlerts("Account Updated!", withMessage: "Your Account Have Successfully Updated!", withYesActionTitle: "Log In!", withNoActionTitle: "OK")
+            } else {
+                self.generalAlerts("Alert!", withMessage: message ?? "", withYesActionTitle: "Cancel Updating!", withNoActionTitle: "Fix it!")
+                sender.setTitle("Try Again", for: .normal)
+                sender.backgroundColor = .red
+            }
         }
     }
     
