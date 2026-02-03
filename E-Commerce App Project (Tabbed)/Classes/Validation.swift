@@ -13,16 +13,16 @@ import UIKit
     @objc func requiredMinLengthValidator(_ requiredErrorMessage: String, integerforMinLength minLength: Int, minLengthErrorMessage: String, withLabelForValidationRules validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
         validator.addValidationToEnsurePresence(withInvalidMessage: NSLocalizedString(requiredErrorMessage, comment: ""))
-        validator.addValidation(toEnsureMinimumLength: UInt(minLength), invalidMessage: NSLocalizedString(minLengthErrorMessage, comment: ""))
+        validator.addValidationToEnsureMinimumLength(UInt(minLength), invalidMessage: NSLocalizedString(minLengthErrorMessage, comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
@@ -31,16 +31,16 @@ import UIKit
     
     @objc func equalityValidator(_ password: Any, with validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
-        validator.addValidation(toEnsureInstanceIsTheSameAs: password, invalidMessage: NSLocalizedString("Should be equal to 'password'", comment: ""))
+        validator.addValidationToEnsureInstance(isTheSameAs: password, invalidMessage: NSLocalizedString("Should be equal to 'password'", comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
@@ -52,13 +52,13 @@ import UIKit
         validator.addValidationToEnsureValidEmail(withInvalidMessage: "Must be a valid email address!")
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
@@ -70,13 +70,13 @@ import UIKit
         validator.addValidationToEnsureRegularExpressionIsMet(withPattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$", invalidMessage: NSLocalizedString("Please check your phone no again!", comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
@@ -88,13 +88,13 @@ import UIKit
         validator.addValidationToEnsurePresence(withInvalidMessage: NSLocalizedString(errorMessage, comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
@@ -103,16 +103,16 @@ import UIKit
     
     @objc func minLengthValidator(_ errorMessage: String, withLabelForValidationRules validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
-        validator.addValidation(toEnsureMinimumLength: 6, invalidMessage: NSLocalizedString(errorMessage, comment: ""))
+        validator.addValidationToEnsureMinimumLength(6, invalidMessage: NSLocalizedString(errorMessage, comment: ""))
         validator.validatorStateChangedHandler = { [weak self] newState in
             switch newState {
-            case .ValidationStateValid:
+            case .validationStateValid:
                 self?.handleValid(validationStatusLabel)
-            case .ValidationStateInvalid:
+            case .validationStateInvalid:
                 self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .ValidationStateWaitingForRemote:
+            case .validationStateWaitingForRemote:
                 self?.handleWaiting()
-            @unknown default:
+            default:
                 break
             }
         }
