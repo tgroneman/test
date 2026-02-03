@@ -24,8 +24,8 @@ class AccountLoginViewController: UIViewController {
         
         validatorObj = Validation()
         
-        loginFormEmail.ajw_attachValidator(validatorObj.emailValidator(validationStatusLabel))
-        loginFormPassword.ajw_attachValidator(validatorObj.requiredMinLengthValidator("Insert Your Password!", integerforMinLength: 1, minLengthErrorMessage: "It can't be just nothing!", withLabelForValidationRules: validationStatusLabel))
+        loginFormEmail.ajw_attach(validatorObj.emailValidator(validationStatusLabel))
+        loginFormPassword.ajw_attach(validatorObj.requiredMinLengthValidator("Insert Your Password!", integerforMinLength: 1, minLengthErrorMessage: "It can't be just nothing!", withLabelForValidationRules: validationStatusLabel))
         
         bindViewModel()
     }
@@ -69,10 +69,10 @@ class AccountLoginViewController: UIViewController {
         viewModel.email.value = loginFormEmail.text ?? ""
         viewModel.password.value = loginFormPassword.text ?? ""
         
-        viewModel.login { [weak self] success in
+        viewModel.login { [weak self] success, _ in
             guard let self = self else { return }
             if success {
-                if self.viewModel.loginState.value == .offlineMode {
+                if case .offlineMode = self.viewModel.loginState.value {
                     sender.setTitle("Demo Mode", for: .normal)
                     sender.backgroundColor = .orange
                 } else {

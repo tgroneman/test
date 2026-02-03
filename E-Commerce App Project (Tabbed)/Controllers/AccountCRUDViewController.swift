@@ -58,35 +58,35 @@ class AccountCRUDViewController: UIViewController {
     }
     
     private func setupValidators() {
-        firstName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
-        editAccountFirstName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
+        firstName.ajw_attach(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
+        editAccountFirstName.ajw_attach(validatorObj.requiredMinLengthValidator("First Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "It has to be something at least!", withLabelForValidationRules: validationStatus))
         
-        lastName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("Last Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "Last Name Please!", withLabelForValidationRules: validationStatus))
-        editAccountLastName.ajw_attachValidator(validatorObj.requiredMinLengthValidator("Last Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "Last Name Please!", withLabelForValidationRules: validationStatus))
+        lastName.ajw_attach(validatorObj.requiredMinLengthValidator("Last Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "Last Name Please!", withLabelForValidationRules: validationStatus))
+        editAccountLastName.ajw_attach(validatorObj.requiredMinLengthValidator("Last Name is Required!", integerforMinLength: 1, minLengthErrorMessage: "Last Name Please!", withLabelForValidationRules: validationStatus))
         
-        phone.ajw_attachValidator(validatorObj.phoneValidator(validationStatus))
-        editAccountPhone.ajw_attachValidator(validatorObj.phoneValidator(validationStatus))
+        phone.ajw_attach(validatorObj.phoneValidator(validationStatus))
+        editAccountPhone.ajw_attach(validatorObj.phoneValidator(validationStatus))
         
-        email.ajw_attachValidator(validatorObj.emailValidator(validationStatus))
-        editAccountEmail.ajw_attachValidator(validatorObj.emailValidator(validationStatus))
+        email.ajw_attach(validatorObj.emailValidator(validationStatus))
+        editAccountEmail.ajw_attach(validatorObj.emailValidator(validationStatus))
         
-        password.ajw_attachValidator(validatorObj.requiredMinLengthValidator("Password is required!", integerforMinLength: 6, minLengthErrorMessage: "It must be at least 6 charecters!", withLabelForValidationRules: validationStatus))
-        editAccountPassword.ajw_attachValidator(validatorObj.requiredMinLengthValidator("Password is required!", integerforMinLength: 6, minLengthErrorMessage: "It must be at least 6 charecters!", withLabelForValidationRules: validationStatus))
+        password.ajw_attach(validatorObj.requiredMinLengthValidator("Password is required!", integerforMinLength: 6, minLengthErrorMessage: "It must be at least 6 charecters!", withLabelForValidationRules: validationStatus))
+        editAccountPassword.ajw_attach(validatorObj.requiredMinLengthValidator("Password is required!", integerforMinLength: 6, minLengthErrorMessage: "It must be at least 6 charecters!", withLabelForValidationRules: validationStatus))
         
-        confirmPassword.ajw_attachValidator(validatorObj.requiredValidator("Required and Should be same as 'Password'", withLabelForValidationRules: validationStatus))
-        editAccountConfirmPassword.ajw_attachValidator(validatorObj.requiredValidator("Required and Should be same as 'Password'", withLabelForValidationRules: validationStatus))
+        confirmPassword.ajw_attach(validatorObj.requiredValidator("Required and Should be same as 'Password'", withLabelForValidationRules: validationStatus))
+        editAccountConfirmPassword.ajw_attach(validatorObj.requiredValidator("Required and Should be same as 'Password'", withLabelForValidationRules: validationStatus))
         
-        country.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        state.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        city.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        postalCode.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        address.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        country.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        state.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        city.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        postalCode.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        address.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
         
-        editAccountCountry.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        editAccountState.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        editAccountCity.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        editAccountPostalCode.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
-        editAccountAddress.ajw_attachValidator(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        editAccountCountry.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        editAccountState.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        editAccountCity.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        editAccountPostalCode.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
+        editAccountAddress.ajw_attach(validatorObj.requiredValidator("Required!", withLabelForValidationRules: validationStatus))
     }
     
     private func setupRegistrationAlert() {
