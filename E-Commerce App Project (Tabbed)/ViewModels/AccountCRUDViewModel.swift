@@ -33,7 +33,7 @@ class AccountCRUDViewModel {
     
     let isLoggedIn: Observable<Bool> = Observable(false)
     
-    private let accountOperations = AccountOperations()
+    private let accountOperations = AccountOperations.sharedInstance
     private let defaults = UserDefaults.standard
     private var existingUserEmail: String = ""
     
@@ -111,7 +111,7 @@ class AccountCRUDViewModel {
             "address": address.value
         ]
         
-        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] (error: Error?, success: Bool, customErrorMessage: String?) in
             guard let self = self else { return }
             
             if success && customErrorMessage == "Registraition Successful" {
@@ -152,7 +152,7 @@ class AccountCRUDViewModel {
             "address": address.value
         ]
         
-        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] (error: Error?, success: Bool, customErrorMessage: String?) in
             guard let self = self else { return }
             
             if success && customErrorMessage == "Update Successful" {

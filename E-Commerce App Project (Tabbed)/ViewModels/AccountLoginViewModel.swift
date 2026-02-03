@@ -21,7 +21,7 @@ class AccountLoginViewModel {
     let email: Observable<String> = Observable("")
     let password: Observable<String> = Observable("")
     
-    private let accountOperations = AccountOperations()
+    private let accountOperations = AccountOperations.sharedInstance
     
     func validateEmail(_ email: String) -> Bool {
         return accountOperations.validateEmailAccount(email)
@@ -49,7 +49,7 @@ class AccountLoginViewModel {
             "password": encryptedPassword
         ]
         
-        accountOperations.sendRequest(toServer: dataToSend) { [weak self] error, success, customErrorMessage in
+        accountOperations.sendRequest(toServer: dataToSend) { [weak self] (error: Error?, success: Bool, customErrorMessage: String?) in
             guard let self = self else { return }
             
             if success {
