@@ -29,24 +29,6 @@ import UIKit
         return validator
     }
     
-    @objc func equalityValidator(_ password: Any, with validationStatusLabel: UILabel) -> AJWValidator {
-        let validator = AJWValidator(type: .string)!
-        validator.addValidation(toEnsureInstanceIsTheSameAs: password, invalidMessage: NSLocalizedString("Should be equal to 'password'", comment: ""))
-        validator.validatorStateChangedHandler = { [weak self] newState in
-            switch newState {
-            case .validationStateValid:
-                self?.handleValid(validationStatusLabel)
-            case .validationStateInvalid:
-                self?.handleInvalid(validator, withLabelForError: validationStatusLabel)
-            case .validationStateWaitingForRemote:
-                self?.handleWaiting()
-            default:
-                break
-            }
-        }
-        return validator
-    }
-    
     @objc func emailValidator(_ validationStatusLabel: UILabel) -> AJWValidator {
         let validator = AJWValidator(type: .string)!
         validator.addValidationToEnsureValidEmail(withInvalidMessage: "Must be a valid email address!")
