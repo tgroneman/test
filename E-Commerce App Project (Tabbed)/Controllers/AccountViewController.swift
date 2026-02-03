@@ -2,13 +2,17 @@
 //  AccountViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
 
 class AccountViewController: UIViewController {
     
+    // MARK: - ViewModel
+    private let viewModel = AccountViewModel()
+    
+    // MARK: - IBOutlets
     @IBOutlet var firstName: UILabel!
     @IBOutlet var lastName: UILabel!
     @IBOutlet var email: UILabel!
@@ -35,62 +39,84 @@ class AccountViewController: UIViewController {
     
     var loggedOutAlert: UIAlertController!
     
-    private var accountOperationsObj: AccountOperations!
-    private var defaults: UserDefaults!
-    private var userData: [String: Any]?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        accountOperationsObj = AccountOperations()
-        defaults = UserDefaults.standard
-        
-        if !defaults.bool(forKey: "SeesionUserLoggedIN") {
-            hideUserInfo()
-        } else {
-            showUserInfo()
-        }
-        
+        setupLogoutAlert()
+        bindViewModel()
+        viewModel.refreshUserData()
+    }
+    
+    private func setupLogoutAlert() {
         loggedOutAlert = UIAlertController(
             title: "Log Out?",
             message: "Are you sure?",
             preferredStyle: .alert
         )
         
-        let noButton = UIAlertAction(title: "Yes, Log Out!", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.defaults.set(false, forKey: "SeesionUserLoggedIN")
-            self.defaults.set("", forKey: "SessionLoggedInuserEmail")
-            self.defaults.set("", forKey: "LoggedInUsersDetail")
-            self.defaults.synchronize()
+        let logoutAction = UIAlertAction(title: "Yes, Log Out!", style: .default) { [weak self] _ in
+            self?.viewModel.logout()
         }
         
-        let yesButton = UIAlertAction(title: "Log Back In!", style: .default, handler: nil)
+        let cancelAction = UIAlertAction(title: "Log Back In!", style: .default, handler: nil)
         
-        loggedOutAlert.addAction(yesButton)
-        loggedOutAlert.addAction(noButton)
+        loggedOutAlert.addAction(cancelAction)
+        loggedOutAlert.addAction(logoutAction)
+    }
+    
+    private func bindViewModel() {
+        viewModel.isLoggedIn.bind { [weak self] isLoggedIn in
+            guard let self = self else { return }
+            if isLoggedIn {
+                self.showUserInfo()
+            } else {
+                self.hideUserInfo()
+            }
+        }
+        
+        viewModel.userFirstName.bind { [weak self] value in
+            self?.firstName.text = value
+        }
+        
+        viewModel.userLastName.bind { [weak self] value in
+            self?.lastName.text = value
+        }
+        
+        viewModel.userEmail.bind { [weak self] value in
+            self?.email.text = value
+        }
+        
+        viewModel.userPhone.bind { [weak self] value in
+            self?.phone.text = value
+        }
+        
+        viewModel.userCountry.bind { [weak self] value in
+            self?.country.text = value
+        }
+        
+        viewModel.userState.bind { [weak self] value in
+            self?.state.text = value
+        }
+        
+        viewModel.userCity.bind { [weak self] value in
+            self?.city.text = value
+        }
+        
+        viewModel.userPostalCode.bind { [weak self] value in
+            self?.postalCode.text = value
+        }
+        
+        viewModel.userAddress.bind { [weak self] value in
+            self?.address.text = value
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         view.reloadInputViews()
-        
-        if !defaults.bool(forKey: "SeesionUserLoggedIN") {
-            hideUserInfo()
-        } else {
-            showUserInfo()
-        }
+        viewModel.refreshUserData()
     }
     
     private func hideUserInfo() {
-        firstName.text = ""
-        lastName.text = ""
-        email.text = ""
-        phone.text = ""
-        country.text = ""
-        state.text = ""
-        city.text = ""
-        postalCode.text = ""
-        address.text = ""
         firstName.isHidden = true
         lastName.isHidden = true
         email.isHidden = true
@@ -140,25 +166,13 @@ class AccountViewController: UIViewController {
         userHistoryOutlet.tintColor = .clear
         userLogOutOutlet.isEnabled = true
         userLogOutOutlet.tintColor = UIColor(named: "Cornflower Blue")
-        
-        userData = defaults.dictionary(forKey: "LoggedInUsersDetail")
-        
-        firstName.text = userData?["firstName"] as? String
-        lastName.text = userData?["lastName"] as? String
-        email.text = userData?["usersEmail"] as? String
-        phone.text = userData?["phone"] as? String
-        country.text = userData?["country"] as? String
-        state.text = userData?["state"] as? String
-        city.text = userData?["city"] as? String
-        postalCode.text = userData?["postalCode"] as? String
-        address.text = userData?["address"] as? String
     }
     
     @IBAction func theEditButtonForLoginOrEdit(_ sender: Any) {
-        if !defaults.bool(forKey: "SeesionUserLoggedIN") {
-            performSegue(withIdentifier: "loginAccountSegue", sender: nil)
-        } else {
+        if viewModel.isLoggedIn.value {
             performSegue(withIdentifier: "editAccountSegue", sender: nil)
+        } else {
+            performSegue(withIdentifier: "loginAccountSegue", sender: nil)
         }
     }
     

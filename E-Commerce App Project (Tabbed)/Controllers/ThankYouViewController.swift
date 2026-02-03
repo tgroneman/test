@@ -2,7 +2,7 @@
 //  ThankYouViewController.swift
 //  E-Commerce App Project (Tabbed)
 //
-//  Converted to Swift
+//  Converted to Swift with MVVM pattern
 //
 
 import UIKit
@@ -10,6 +10,10 @@ import WebKit
 
 class ThankYouViewController: UIViewController {
     
+    // MARK: - ViewModel
+    private let viewModel = ThankYouViewModel()
+    
+    // MARK: - IBOutlets
     @IBOutlet var wkwebviewOutletForPDFShow: WKWebView!
     @IBOutlet var uiviewForArko: UIView!
     @IBOutlet var emailThankYouPage: UILabel!
@@ -17,11 +21,17 @@ class ThankYouViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let defaults = UserDefaults.standard
-        let PDFFilePath = defaults.value(forKey: "pdfFilePath") as? String ?? ""
-        emailThankYouPage.text = defaults.value(forKey: "SessionLoggedInuserEmail") as? String
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        viewModel.userEmail.bind { [weak self] email in
+            self?.emailThankYouPage.text = email
+        }
         
-        let pdfUrl = URL(fileURLWithPath: PDFFilePath)
-        wkwebviewOutletForPDFShow.loadFileURL(pdfUrl, allowingReadAccessTo: pdfUrl)
+        viewModel.pdfFilePath.bind { [weak self] path in
+            guard let self = self, let pdfUrl = self.viewModel.getPDFURL() else { return }
+            self.wkwebviewOutletForPDFShow.loadFileURL(pdfUrl, allowingReadAccessTo: pdfUrl)
+        }
     }
 }
